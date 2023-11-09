@@ -34,6 +34,14 @@ class VisitRequestController extends Controller
 
         return VisitRequest::create($fields);
     }
+    
+        /**
+     * Search by email
+     */
+    public function search($email)
+    {
+        return VisitRequest::where('email', $email)->get();
+    }
 
     /**
      * Display the specified resource.

@@ -12,11 +12,13 @@ use App\Http\Controllers\PromocodeController;
 use App\Http\Controllers\SMSController;
 use App\Http\Controllers\UncompletedController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VisitRequestController;
 use App\Http\Controllers\VisitsController;
 use App\Models\Content;
 use App\Models\Contract;
 use App\Models\Promocode;
 use App\Models\Uncompleted;
+use App\Models\VisitRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -140,5 +142,7 @@ Route::post('login', [AuthController::class, 'login']);
         Route::get('sms', [SMSController::class, 'verify']);
 
         // Visit requests
-        Route::get('visit-request', [SMSController::class, 'verify']);
+        Route::get('visit-request', [VisitRequestController::class, 'index']);
+        Route::post('visit-request', [VisitRequestController::class, 'store']);
+        Route::get('visit-request/search/{email}', [VisitRequestController::class, 'search']);
 
