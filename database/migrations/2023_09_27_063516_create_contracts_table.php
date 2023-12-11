@@ -13,18 +13,12 @@ return new class extends Migration
     {
         Schema::create('contracts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
             $table->string('phone');
             $table->string('email');
-            $table->string('company_type');
             $table->string('commercial_number');
-            $table->string('tax_number');
-            $table->string('city');
-            $table->string('building_number');
-            $table->string('street_name');
-            $table->string('second_number');
-            $table->string('district');
-            $table->string('zip_code');
+            $table->string('address');
             $table->string('indoor_cameras');
             $table->string('outdoor_cameras');
             $table->string('storage_device');
@@ -34,9 +28,10 @@ return new class extends Migration
             $table->string('contract_date');
             $table->string('expiry_date');
             $table->string('contract_number')->unique();
-            $table->string('paid_amount')->nullable();
+            $table->string('price')->nullable();
+            $table->string('vat')->nullable();
             $table->string('discount')->nullable();
-            
+            $table->string('total_price')->nullable();            
             $table->timestamps();
         });
     }

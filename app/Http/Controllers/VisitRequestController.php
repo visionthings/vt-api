@@ -29,9 +29,8 @@ class VisitRequestController extends Controller
     public function store(Request $request)
     {
         $fields = $request->validate([
-            'name' => 'required', 'phone' => 'required', 'email'=>'required'
+            'user_id' => 'required', 'name' => 'required', 'phone' => 'required', 'email'=>'required'
         ]);
-
         return VisitRequest::create($fields);
     }
     

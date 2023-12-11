@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita43ce49c61160eb8368b5e1ebc8a95d9
+class ComposerStaticInit6661a0fad9fc4a33e97aefa749d6be0d
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -391,8 +391,8 @@ class ComposerStaticInita43ce49c61160eb8368b5e1ebc8a95d9
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -609,6 +609,7 @@ class ComposerStaticInita43ce49c61160eb8368b5e1ebc8a95d9
         'App\\Http\\Controllers\\SMSController' => __DIR__ . '/../..' . '/app/Http/Controllers/SMSController.php',
         'App\\Http\\Controllers\\UncompletedController' => __DIR__ . '/../..' . '/app/Http/Controllers/UncompletedController.php',
         'App\\Http\\Controllers\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/UserController.php',
+        'App\\Http\\Controllers\\VisitRequestController' => __DIR__ . '/../..' . '/app/Http/Controllers/VisitRequestController.php',
         'App\\Http\\Controllers\\VisitsController' => __DIR__ . '/../..' . '/app/Http/Controllers/VisitsController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
@@ -631,6 +632,7 @@ class ComposerStaticInita43ce49c61160eb8368b5e1ebc8a95d9
         'App\\Models\\SMS' => __DIR__ . '/../..' . '/app/Models/SMS.php',
         'App\\Models\\Uncompleted' => __DIR__ . '/../..' . '/app/Models/Uncompleted.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
+        'App\\Models\\VisitRequest' => __DIR__ . '/../..' . '/app/Models/VisitRequest.php',
         'App\\Models\\Visits' => __DIR__ . '/../..' . '/app/Models/Visits.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
@@ -6987,9 +6989,9 @@ class ComposerStaticInita43ce49c61160eb8368b5e1ebc8a95d9
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita43ce49c61160eb8368b5e1ebc8a95d9::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita43ce49c61160eb8368b5e1ebc8a95d9::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInita43ce49c61160eb8368b5e1ebc8a95d9::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit6661a0fad9fc4a33e97aefa749d6be0d::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit6661a0fad9fc4a33e97aefa749d6be0d::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit6661a0fad9fc4a33e97aefa749d6be0d::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -4,23 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Contract extends Model
 {
     use HasFactory;
     protected $fillable = [
+      'user_id',
       'name' ,
       'phone',
       'email',
-      'company_type',
+      'address',
       'commercial_number',
-      'tax_number',
-      'city',
-      'building_number',
-      'street_name',
-      'second_number',
-      'district',
-      'zip_code',
       'indoor_cameras',
       'outdoor_cameras',
       'storage_device',
@@ -30,7 +25,12 @@ class Contract extends Model
       'contract_date',
       'expiry_date',
       'contract_number',
-      'paid_amount',
-      'discount'
-    ];
+      'price',
+      'vat',      
+      'discount',
+      'total_price',
+   ];
+   public function user ():BelongsTo {
+    return $this->BelongsTo(User::class);
+   }
 }

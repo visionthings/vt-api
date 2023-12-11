@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('visit_requests', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
             $table->string('name');
             $table->string('phone');

@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -17,29 +18,13 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'username',
         'password',
         'name' ,
-      'phone',
-      'email',
-      'company_type',
-      'commercial_number',
-      'tax_number',
-      'address',
-      'city',
-      'building_number',
-      'street_name',
-      'second_number',
-      'district',
-      'zip_code',
-        'manage_pages',
-        'manage_contracts',
-        'create_contract',
-        'manage_promocodes',
-        'manage_members',
-        'view_reports',
-        'view_mail',
-        'profile_pic'
+        'phone',
+        'email',
+        'commercial_number',
+        'address',
+
     ];
 
     /**
@@ -62,5 +47,10 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-
+    public function contracts():HasMany{
+        return $this->hasMany(Contract::class);
+    }
+    public function visit_requests():HasMany{
+        return $this->hasMany(VisitRequest::class);
+    }
 }
