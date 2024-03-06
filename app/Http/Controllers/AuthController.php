@@ -14,11 +14,9 @@ class AuthController extends Controller
     {
         $fields = $request->validate([
             'name' => 'required',
-            'email' => 'required',
+            'email' => 'required | unique:users,email',
             'password' => 'required',
             'phone' => 'required',
-            'commercial_number' => 'required',
-            'address' => 'required',
             'email_verified' => 'required'
         ]);
 
@@ -27,8 +25,6 @@ class AuthController extends Controller
             'name' => $fields['name'],
             'phone' => $fields['phone'],
             'email' => $fields['email'],
-            'commercial_number' => $fields['commercial_number'],
-            'address' => $fields['address'],
             'email_verified' => $fields['email_verified']
         ]);
 

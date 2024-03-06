@@ -13,7 +13,7 @@ class EmailController extends Controller
     public function verification_mail(Request $request)
     {
         $user_data = $request->all();
-        $url = 'https://api.vt.com.sa/api/email-verified/' . $user_data['id'];
+        $url = 'http://localhost:4200/email-verified/' . $user_data['id'];
         FacadesMail::to($user_data['email'])->send(new VerificationMail($user_data, $url));
         return response(['message' => 'success', 'email' => $user_data['email']], 201);
     }

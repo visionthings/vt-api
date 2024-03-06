@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ContractController;
@@ -150,3 +151,8 @@ Route::get('visit-request/search/{email}', [VisitRequestController::class, 'sear
 
 // Email Verification 
 Route::post('email-verification', [EmailController::class, 'verification_mail']);
+
+// User companies
+Route::post('company/store', [CompanyController::class, 'store']);
+Route::get('company/{user_id}', [CompanyController::class, 'index']);
+Route::delete('company/{id}', [CompanyController::class, 'destroy']);

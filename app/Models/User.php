@@ -23,8 +23,6 @@ class User extends Authenticatable
         'name',
         'phone',
         'email',
-        'commercial_number',
-        'address',
         'email_verified'
 
     ];
@@ -56,5 +54,9 @@ class User extends Authenticatable
     public function visit_requests(): HasMany
     {
         return $this->hasMany(VisitRequest::class);
+    }
+    public function companies (): HasMany
+    {
+        return $this->hasMany(Company::class);
     }
 }

@@ -13,7 +13,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::with(['contracts', 'visit_requests'])->get();
+        return User::with(['contracts', 'visit_requests', 'companies'])->get();
     }
 
     /**
@@ -31,11 +31,9 @@ class UserController extends Controller
     {
         $form_fields = $request->validate([
             'name' => 'required',
-            'email' => 'required',
+            'email' => 'required | unique:users,email',
             'password' => 'required',
             'phone' => 'required',
-            'commercial_number' => 'required',
-            'address' => 'required',
             'email_verified' => 'required'
         ]);
 
@@ -47,7 +45,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        return User::with(['contracts', 'visit_requests'])->find($id);
+        return User::with(['contracts', 'visit_requests', 'companies'])->find($id);
     }
 
     /**
@@ -66,11 +64,9 @@ class UserController extends Controller
         $user = User::find($id);
         $form_fields = $request->validate([
             'name' => 'nullable',
-            'email' => 'nullable',
+            'email' => 'nullable | unique:users,email',
             'password' => 'nullable',
             'phone' => 'nullable',
-            'commercial_number' => 'nullable',
-            'address' => 'nullable',
             'email_verified' => 'nullable'
         ]);
         if (empty($form_fields['password'])) unset($form_fields['password']);
@@ -89,7 +85,7 @@ class UserController extends Controller
             $user->update(['email_verified' => 'yes']);
             return $user;
         } else {
-            return response(['message' => 'not found'], 401);
+            return response(['message' => 'not found'], 404);
         }
     }
 

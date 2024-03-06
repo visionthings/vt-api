@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contract;
+use App\Models\ContractNumber;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -28,8 +29,11 @@ class ContractController extends Controller
      * Display a count of the resource.
      */    
     public function number()
-    {        
-        return Contract::all()->last()->id + 1000;
+    {
+        ContractNumber::create([
+            'contract_number' => ContractNumber::all()->last()->contract_number + 1
+        ]);
+        return ContractNumber::all()->last()->contract_number;
     }
 
     /**
