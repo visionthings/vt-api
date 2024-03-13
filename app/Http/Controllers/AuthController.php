@@ -52,12 +52,12 @@ class AuthController extends Controller
         ]);
 
         // Check email
-        $user = User::where('email', $fields['email'])->first();
+        $user = User::where('email', $fields['email'])->with('roles')->first();
 
         // Check password
         if (!$user || !Hash::check($fields['password'], $user->password)) {
             return response([
-                'message' => 'Bad Creds'
+                'message' => 'البريد الإلكتروني / كلمة المرور غير صحيحة.'
             ], 401);
         }
 

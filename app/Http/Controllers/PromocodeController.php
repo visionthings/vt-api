@@ -28,16 +28,13 @@ class PromocodeController extends Controller
      */
     public function store(Request $request)
     {
-        $form_fields = $request->validate([
-
-            'promocode'=>'required',
-            'discount'=>'required',
-            'start_date'=>'required',
-            'expiry_date'=>'required',
-
-        ]);
-
-        return Promocode::create($form_fields);
+        $user = auth()->user();
+        if (!$user || !$user->hasRole('super_admin')) {
+            return response(['message'=>'عفواً، ليس لديك الصلاحية لإنشاء كوبون خصم.'], 401);
+        } else {
+            Promocode::create($request->all());
+            return response(['message'=>'تم إنشاء كوبون الخصم بنجاح.'], 200);
+        }
     }
 
     /**

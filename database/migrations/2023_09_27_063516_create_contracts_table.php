@@ -28,9 +28,9 @@ return new class extends Migration
             $table->string('contract_date');
             $table->string('expiry_date');
             $table->string('contract_number')->unique();
-            $table->string('price')->nullable();
-            $table->string('vat')->nullable();
-            $table->string('discount')->nullable();
+            $table->string('price')->default(0);
+            $table->string('vat')->default(0);
+            $table->string('discount')->default(0);
             $table->string('total_price')->nullable();            
             $table->timestamps();
         });

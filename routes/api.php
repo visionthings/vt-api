@@ -36,13 +36,51 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+
 // Users Register & Login
 Route::post('register', [AuthController::class, 'register']);
-Route::post('logout', [AuthController::class, 'logout']);
 Route::post('login', [AuthController::class, 'login']);
+
+Route::group(['middleware'=>'auth:sanctum'], function (){
+    Route::get('logout', [AuthController::class, 'logout']);
+
+    // Users
+    Route::get('users', [UserController::class, 'index']);
+    Route::get('users/count', [UserController::class, 'count']);
+    Route::get('users/{id}', [UserController::class, 'show']);
+    Route::post('users/{id}', [UserController::class, 'update']);
+    Route::put('users/{id}', [UserController::class, 'update']);
+    Route::delete('users/{id}', [UserController::class, 'destroy']);
+
+
+
+    // Contracts
+    Route::get('contracts', [ContractController::class, 'index']);
+    Route::get('contracts/count', [ContractController::class, 'count']);
+    Route::get('contracts/number', [ContractController::class, 'number']);
+    Route::get('contracts/sales', [ContractController::class, 'sales']);
+    Route::get('contracts/search/{contract_number}', [ContractController::class, 'search']);
+    Route::get('contracts/search_name/{name}', [ContractController::class, 'search_name']);
+    Route::post('contracts', [ContractController::class, 'store']);
+    Route::get('contracts/{id}', [ContractController::class, 'show']);
+    Route::post('contracts/{id}', [ContractController::class, 'update']);
+    Route::delete('contracts/{id}', [ContractController::class, 'destroy']);
+
+    // Promo codes
+    Route::post('promocodes', [PromocodeController::class, 'store']);
+    Route::post('promocodes/{id}', [PromocodeController::class, 'update']);
+    Route::delete('promocodes/{id}', [PromocodeController::class, 'destroy']);
+
+    // Visit requests
+    Route::delete('visit-request/{id}', [VisitRequestController::class, 'destroy']);
+
+});
+
+// Users
+Route::post('users', [UserController::class, 'store']);
+Route::get('verify-email/{id}', [UserController::class, 'verify_email']);
+
+
 
 // ContactMessages
 Route::get('contact-messages', [ContactMessageController::class, 'index']);
@@ -72,22 +110,7 @@ Route::get('contents/{id}', [ContentController::class, 'show']);
 
 // Promocodes
 Route::get('promocodes', [PromocodeController::class, 'index']);
-
 Route::get('promocodes/{id}', [PromocodeController::class, 'show']);
-Route::post('promocodes/{id}', [PromocodeController::class, 'update']);
-Route::delete('promocodes/{id}', [PromocodeController::class, 'destroy']);
-
-// Contracts
-Route::get('contracts', [ContractController::class, 'index']);
-Route::get('contracts/count', [ContractController::class, 'count']);
-Route::get('contracts/number', [ContractController::class, 'number']);
-Route::get('contracts/sales', [ContractController::class, 'sales']);
-Route::get('contracts/search/{contract_number}', [ContractController::class, 'search']);
-Route::get('contracts/search_name/{name}', [ContractController::class, 'search_name']);
-Route::post('contracts', [ContractController::class, 'store']);
-Route::get('contracts/{id}', [ContractController::class, 'show']);
-Route::post('contracts/{id}', [ContractController::class, 'update']);
-Route::delete('contracts/{id}', [ContractController::class, 'destroy']);
 
 // Uncompleted
 Route::get('uncompleted', [UncompletedController::class, 'index']);
@@ -109,16 +132,6 @@ Route::get('visits', [VisitsController::class, 'index']);
 Route::get('visits/count', [VisitsController::class, 'count']);
 Route::post('visits', [VisitsController::class, 'store']);
 
-
-// Users
-Route::get('users', [UserController::class, 'index']);
-Route::post('users', [UserController::class, 'store']);
-Route::get('users/{id}', [UserController::class, 'show']);
-Route::get('verify-email/{id}', [UserController::class, 'verify_email']);
-Route::post('users/{id}', [UserController::class, 'update']);
-Route::put('users/{id}', [UserController::class, 'update']);
-Route::delete('users/{id}', [UserController::class, 'destroy']);
-
 // Nav Elements
 Route::post('nav-elements', [NavEleController::class, 'store']);
 Route::post('nav-elements/{id}', [NavEleController::class, 'update']);
@@ -134,16 +147,6 @@ Route::post('contents', [ContentController::class, 'store']);
 Route::post('contents/{id}', [ContentController::class, 'update']);
 Route::delete('contents/{id}', [ContentController::class, 'destroy']);
 
-// Promocodes
-Route::post('promocodes', [PromocodeController::class, 'store']);
-// Protected Routes
-// Route::group(['middleware' => ['auth:sanctum']], function() {
-// });
-
-// SMS Verification 
-Route::get('sms/{number}', [SMSController::class, 'create']);
-Route::post('sms', [SMSController::class, 'verify']);
-
 // Visit requests
 Route::get('visit-request', [VisitRequestController::class, 'index']);
 Route::post('visit-request', [VisitRequestController::class, 'store']);
@@ -156,3 +159,5 @@ Route::post('email-verification', [EmailController::class, 'verification_mail'])
 Route::post('company/store', [CompanyController::class, 'store']);
 Route::get('company/{user_id}', [CompanyController::class, 'index']);
 Route::delete('company/{id}', [CompanyController::class, 'destroy']);
+
+

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\VisitRequest;
 use Illuminate\Http\Request;
+use function Laravel\Prompts\error;
 
 class VisitRequestController extends Controller
 {
@@ -71,6 +72,10 @@ class VisitRequestController extends Controller
      */
     public function destroy(VisitRequest $visitRequest, $id)
     {
+        $user = auth()->user();
+        if (!$user->hasRole('super_admin')) {
+            return response('عفواً، ليس لديك الصلاحية لحذف طلب الزيارة.');
+        }
         return VisitRequest::destroy($id);
     }
 }

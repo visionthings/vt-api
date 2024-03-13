@@ -45,6 +45,8 @@ class ContractController extends Controller
         return $sales;
     }
 
+
+
     /**
      * Search by contract number
      */

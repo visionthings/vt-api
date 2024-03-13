@@ -13,7 +13,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::with(['contracts', 'visit_requests', 'companies'])->get();
+        return User::with(['contracts', 'visit_requests', 'companies', 'roles'])->get();
     }
 
     /**
@@ -33,7 +33,7 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required | unique:users,email',
             'password' => 'required',
-            'phone' => 'required',
+            'phone' => 'nullable',
             'email_verified' => 'required'
         ]);
 
@@ -45,7 +45,8 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        return User::with(['contracts', 'visit_requests', 'companies'])->find($id);
+
+        return User::with(['contracts', 'visit_requests', 'companies', 'media'])->find($id);
     }
 
     /**
@@ -64,7 +65,7 @@ class UserController extends Controller
         $user = User::find($id);
         $form_fields = $request->validate([
             'name' => 'nullable',
-            'email' => 'nullable | unique:users,email',
+            'email' => 'nullable',
             'password' => 'nullable',
             'phone' => 'nullable',
             'email_verified' => 'nullable'
@@ -87,6 +88,11 @@ class UserController extends Controller
         } else {
             return response(['message' => 'not found'], 404);
         }
+    }
+
+    public function count()
+    {
+        return User::all()->count();
     }
 
     /**
