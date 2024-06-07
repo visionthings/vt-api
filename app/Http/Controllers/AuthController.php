@@ -58,6 +58,10 @@ class AuthController extends Controller
             ], 401);
         }
 
+        if ($user->membership_status == 'blocked') {
+            return response(['message' => 'تم إيقاف عضويتك عن طريق إدارة منصة VT.'], 401);
+        }
+
         $token = $user->createToken('login_token')->plainTextToken;
 
         $response = [

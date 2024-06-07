@@ -12,7 +12,7 @@ class TicketController extends Controller
      */
     public function index()
     {
-        return Ticket::all();
+        return Ticket::latest()->paginate(10);
     }
 
 
@@ -35,15 +35,30 @@ class TicketController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function close_ticket(TicketRequest $request, Ticket $ticket)
+    public function close_ticket(TicketRequest $request, Ticket $ticket, string $id)
     {
         $user = auth()->user();
-        if (!$user || !$user->hasRole('super_admin') || !$user->can('close_ticket')) {
-            return response()->json('not auth', 401);
-        };
-        $ticket = Ticket::find($request->id);
-        $ticket->status = 'closed';
-        return response()->json('done', 201);
+        if ($user->hasRole('super_admin')) {
+            $ticket = Ticket::find($id);
+            $ticket->status = 'closed';
+            $ticket->save();
+            return response()->json(['message' => 'تم غلق الطلب بنجاح.'], 201);
+        }
+    }
+
+    public function open_tickets()
+    {
+        $user = auth()->user();
+        if ($user->hasRole('super_admin')) {
+            return Ticket::where('status', 'open')->latest()->paginate(10);
+        }
+    }
+    public function closed_tickets()
+    {
+        $user = auth()->user();
+        if ($user->hasRole('super_admin')) {
+            return Ticket::where('status', 'closed')->latest()->paginate(10);
+        }
     }
 
     /**

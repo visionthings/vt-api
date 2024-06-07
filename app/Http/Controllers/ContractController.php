@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ContractRequest;
 use App\Models\ArchivedContract;
 use App\Models\Contract;
+use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Spatie\LaravelPdf\Facades\Pdf;
 
 class ContractController extends Controller
 {
@@ -16,7 +16,31 @@ class ContractController extends Controller
      */
     public function index()
     {
-        return Contract::all();
+        $user = auth()->user();
+        if ($user->hasRole('super_admin')) {
+            return Contract::latest()->paginate(10);
+        }
+    }
+
+    public function filter(string $filter)
+    {
+        $user = auth()->user();
+        if ($user->hasRole('super_admin')) {
+            switch ($filter) {
+                case 'all':
+                    return Contract::latest()->paginate(10);
+                case 'unpaid':
+                    return Contract::where('is_paid', 0)->latest()->paginate(10);
+
+                case 'expires-soon':
+                    return Contract::where('expiry_date', '<',  now()->addDays(10))->latest()->paginate(10);
+                case 'expired':
+                    return Contract::where('expiry_date', '<',  now())->latest()->paginate(10);
+
+                default:
+                    return Contract::latest()->paginate(10);
+            }
+        }
     }
 
     /**
@@ -40,23 +64,20 @@ class ContractController extends Controller
      */
     public function search($id)
     {
-        $contract = Contract::find($id);
-        return $contract;
+        $user = auth()->user();
+        if ($user->hasRole('super_admin')) {
+            $contract = Contract::find($id);
+            return response()->json($contract, 200);
+        }
     }
-    /**
-     * Search by name
-     */
-    public function search_by_name($name)
-    {
-        return Contract::where('name', $name)->get();
-    }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(ContractRequest $request)
     {
         $user = auth()->user();
-        $vat = $request->total_price * 0.15;
+        $vat = $request->total_price * 0.15 * 0.8695655;
         $price = $request->total_price;
         $is_contract_unpaid = Contract::where([['user_id', '=', $user->id], ['is_paid', '=', 0]])->latest()->first();
         if ($is_contract_unpaid) {
@@ -110,7 +131,8 @@ class ContractController extends Controller
      */
     public function show(Contract $contract, string $id)
     {
-        return Contract::find($id);
+        $contract = Contract::find($id);
+        return response()->json($contract, 200);
     }
 
     /**
@@ -119,7 +141,26 @@ class ContractController extends Controller
     public function update(ContractRequest $request, Contract $contract, string $id)
     {
         $contract = $contract->find($id);
-        $contract->update($request->all());
+        $vat = $request->price * 0.15 * 0.8695655;
+        $contract->update([
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'commercial_number' => $request->commercial_number,
+            'address' => $request->address,
+            'indoor_cameras' => $request->indoor_cameras,
+            'outdoor_cameras' => $request->outdoor_cameras,
+            'storage_device' => $request->storage_device,
+            'period_of_record' => $request->period_of_record,
+            'show_screens' => $request->show_screens,
+            'camera_type' => $request->camera_type,
+            'contract_date' => $request->contract_date,
+            'expiry_date' => $request->expiry_date,
+            'price' => $request->price,
+            'vat' => $vat,
+            'discount' => 0,
+            'total_price' => $request->price,
+        ]);
         return $contract;
     }
 
@@ -152,6 +193,38 @@ class ContractController extends Controller
         $new_contract->update(['is_paid' => 1]);
     }
 
+    // Create paid contract for Admin only
+    public function create_paid_contract(Request $request)
+    {
+        $user = auth()->user();
+        $vat = $request->price * 0.15 * 0.8695655;
+        if ($user->hasRole('super_admin')) {
+            $contract = Contract::create([
+                'user_id' => 1,
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'commercial_number' => $request->commercial_number,
+                'address' => $request->address,
+                'indoor_cameras' => $request->indoor_cameras,
+                'outdoor_cameras' => $request->outdoor_cameras,
+                'storage_device' => $request->storage_device,
+                'period_of_record' => $request->period_of_record,
+                'show_screens' => $request->show_screens,
+                'camera_type' => $request->camera_type,
+                'contract_date' => now()->toDateString(),
+                'expiry_date' => now()->addYear()->toDateString(),
+                'price' => $request->price,
+                'vat' => $vat,
+                'discount' => 0,
+                'total_price' => $request->price,
+                'is_paid' => 1
+            ]);
+
+            return response()->json($contract, 200);
+        }
+    }
+
     // Apply Discount
     public function apply_discount(Request $request)
     {
@@ -160,7 +233,7 @@ class ContractController extends Controller
         $discount_value = ($contract->total_price * $discount) / 100;
         if ($contract->discount == 0) {
             $total_price = $contract->total_price - $discount_value;
-            $vat = $total_price * 0.15;
+            $vat = $total_price * 0.15 * 0.8695655;
             $contract->update(['discount' => $discount, 'total_price' => $total_price, 'vat' => $vat]);
             return $contract;
         } else {
@@ -179,6 +252,9 @@ class ContractController extends Controller
      */
     public function destroy(Contract $contract, string $id)
     {
-        return $contract::destroy($id);
+        $user = auth()->user();
+        if ($user->hasRole('super_admin')) {
+            return $contract::destroy($id);
+        }
     }
 }

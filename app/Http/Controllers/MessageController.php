@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\MessageRequest;
 use App\Models\Message;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MessageController extends Controller
 {
@@ -13,7 +14,10 @@ class MessageController extends Controller
      */
     public function index()
     {
-        return Message::all();
+        $user = auth()->user();
+        if ($user->hasRole('super_admin')) {
+            return Message::latest()->paginate(10);
+        }
     }
 
     /**

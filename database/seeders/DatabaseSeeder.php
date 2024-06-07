@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'م. هتان عاشور',
             'email' => 'eng.hattanashour@gmail.com',
             'password' => 'admin123456',
-            'phone' => '01234567'
-
+            'phone' => '01234567',
+            'email_verified_at' => now()
         ]);
 
         $super_admin_user->addMedia(public_path('images/eng.hattan.png'))->toMediaCollection('admin');

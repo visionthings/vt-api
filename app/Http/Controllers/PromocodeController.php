@@ -12,7 +12,10 @@ class PromocodeController extends Controller
      */
     public function index()
     {
-        return Promocode::all();
+        $user = auth()->user();
+        if ($user->hasRole('super_admin')) {
+            return Promocode::latest()->paginate(10);
+        }
     }
 
     /**
@@ -21,9 +24,7 @@ class PromocodeController extends Controller
     public function store(PromocodeRequest $request)
     {
         $user = auth()->user();
-        if (!$user || !$user->hasRole('super_admin')) {
-            return response(['message' => 'عفواً، ليس لديك الصلاحية لإنشاء كوبون خصم.'], 401);
-        } else {
+        if ($user->hasRole('super_admin')) {
             Promocode::create($request->all());
             return response(['message' => 'تم إنشاء كوبون الخصم بنجاح.'], 200);
         }
@@ -42,9 +43,12 @@ class PromocodeController extends Controller
      */
     public function update(PromocodeRequest $request, Promocode $promocode, int $id)
     {
-        $promocode = Promocode::find($id);
-        $promocode::where('id', $id)->update($request->all());
-        return $promocode;
+        $user = auth()->user();
+        if ($user->hasRole('super_admin')) {
+            $promocode = Promocode::find($id);
+            $promocode::where('id', $id)->update($request->all());
+            return $promocode;
+        }
     }
 
     /**
@@ -52,6 +56,9 @@ class PromocodeController extends Controller
      */
     public function destroy(Promocode $promocode, string $id)
     {
-        return $promocode->destroy($id);
+        $user = auth()->user();
+        if ($user->hasRole('super_admin')) {
+            return $promocode->destroy($id);
+        }
     }
 }
