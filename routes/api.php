@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminMailController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CameraPriceController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\ContactEmailController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PromocodeController;
@@ -20,6 +21,9 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('reset-password', [AuthController::class, 'reset_password']);
 Route::post('create-new-password', [AuthController::class, 'create_new_password']);
+
+// Contact Email
+Route::resource('contact-email', ContactEmailController::class);
 
 // Users
 Route::post('users', [UserController::class, 'store']);

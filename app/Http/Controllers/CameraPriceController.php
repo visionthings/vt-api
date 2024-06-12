@@ -13,7 +13,7 @@ class CameraPriceController extends Controller
      */
     public function index()
     {
-        return CameraPrice::all();
+        return CameraPrice::all()->except([1]);
     }
 
     /**

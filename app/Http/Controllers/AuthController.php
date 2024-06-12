@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthRequest;
+use App\Mail\AdminMail;
 use App\Mail\ResetPasswordMail;
 use App\Mail\VerificationMail;
+use App\Models\ContactEmail;
 use App\Models\PasswordResetToken;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -30,6 +32,11 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $token
         ];
+
+        $admin_mail = ContactEmail::latest()->first();
+        $subject = 'تم إنشاء حساب جديد على المنصة';
+        $message = `تم إنشاء حساب جديد على منصة VT باسم {{$user->name}} ورقم جوال {{$user->phone}}`;
+        FacadesMail::to($admin_mail->email)->send(new AdminMail($subject, $message));
 
         return response()->json($response, 201);
     }
@@ -87,6 +94,7 @@ class AuthController extends Controller
         $user = User::find($id);
         if ($user->email_verification_token == $token) {
             $user->email_verified_at = now();
+            $user->stage = '2';
             $user->save();
             return response()->json('success', 200);
         } else {

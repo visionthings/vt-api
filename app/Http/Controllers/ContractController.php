@@ -3,11 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ContractRequest;
+use App\Mail\AdminMail;
 use App\Models\ArchivedContract;
+use App\Models\ContactEmail;
 use App\Models\Contract;
+use App\Models\User;
 use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail as FacadesMail;
+
 
 class ContractController extends Controller
 {
@@ -101,8 +106,22 @@ class ContractController extends Controller
                 'discount' => 0,
                 'total_price' => $request->total_price,
             ]);
+
+            $admin_mail = ContactEmail::latest()->first();
+            $subject = 'تم إنشاء عقد جديد غير مدفوع على المنصة';
+            $message = `تم إنشاء عقد جديد غير مدفوع على منصة VT باسم {{$user->name}} ورقم جوال {{$user->phone}}`;
+            FacadesMail::to($admin_mail->email)->send(new AdminMail($subject, $message));
+            $user->stage = '3';
+            $user->save();
             return $is_contract_unpaid;
         } else {
+
+            $admin_mail = ContactEmail::latest()->first();
+            $subject = 'تم إنشاء عقد جديد غير مدفوع على المنصة';
+            $message = `تم إنشاء عقد جديد غير مدفوع على منصة VT باسم {{$user->name}} ورقم جوال {{$user->phone}}`;
+            FacadesMail::to($admin_mail->email)->send(new AdminMail($subject, $message));
+            $user->stage = '3';
+            $user->save();
             return Contract::create([
                 'user_id' => $user->id,
                 'name' => $user->name,
@@ -161,6 +180,7 @@ class ContractController extends Controller
             'discount' => 0,
             'total_price' => $request->price,
         ]);
+
         return $contract;
     }
 
@@ -191,6 +211,10 @@ class ContractController extends Controller
         ]);
         $expired_contract->delete();
         $new_contract->update(['is_paid' => 1]);
+        $admin_mail = ContactEmail::latest()->first();
+        $subject = 'تم تجديد عقد مدفوع على المنصة';
+        $message = `تم تجديد عقد مدفوع على منصة VT باسم {{$expired_contract->name}} ورقم جوال {{$expired_contract->phone}}`;
+        FacadesMail::to($admin_mail->email)->send(new AdminMail($subject, $message));
     }
 
     // Create paid contract for Admin only
@@ -220,7 +244,15 @@ class ContractController extends Controller
                 'total_price' => $request->price,
                 'is_paid' => 1
             ]);
+            $admin_mail = ContactEmail::latest()->first();
+            $subject = 'تم إنشاء عقد جديد مدفوع على المنصة';
+            $message = `تم إنشاء عقد جديد مدفوع على منصة VT باسم {{$request->name}} ورقم جوال {{$request->phone}}`;
 
+            if ($admin_mail) {
+                FacadesMail::to($admin_mail->email)->send(new AdminMail($subject, $message));
+            }
+            $user->stage = '4';
+            $user->save();
             return response()->json($contract, 200);
         }
     }
@@ -244,6 +276,10 @@ class ContractController extends Controller
     public function apply_payment(Request $request)
     {
         $contract = Contract::find($request->contract_number);
+        $user = auth()->user();
+        if ($user) {
+            $user->update(['stage' => '4']);
+        }
         return $contract->update(['is_paid' => true]);
     }
 

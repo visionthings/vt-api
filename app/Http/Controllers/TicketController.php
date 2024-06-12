@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TicketRequest;
+use App\Mail\AdminMail;
+use App\Models\ContactEmail;
 use App\Models\Ticket;
+use Illuminate\Support\Facades\Mail as FacadesMail;
 
 class TicketController extends Controller
 {
@@ -21,6 +24,10 @@ class TicketController extends Controller
      */
     public function store(TicketRequest $request)
     {
+        $admin_mail = ContactEmail::latest()->first();
+        $subject = 'طلب زيارة جديد على المنصة';
+        $message = `تم إنشاء طلب زيارة جديد مدفوع على منصة VT باسم {{$request->name}} ورقم جوال {{$request->phone}}`;
+        FacadesMail::to($admin_mail->email)->send(new AdminMail($subject, $message));
         return Ticket::create($request->all());
     }
 
