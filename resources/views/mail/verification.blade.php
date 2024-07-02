@@ -8,15 +8,8 @@
     <tr>
         <td style="padding-right: 20px; padding-left:20px">
             <p style="text-align: center;">مرحباً، {{ $user['name'] }}</p>
-            <p style="text-align: center;">لقد أضفت {{ $user['email'] }} مؤخراً إلى حسابك على موقع رؤية الأشياء.</p>
-            <p style="text-align: center;"> يرجى تأكيد عنوان البريد الإلكتروني هذا حتى يمكنك الإستفادة من جميع خدماتنا.</p>
-
-            <div style="padding-top:40px; display:flex; justify-items:center; align-items:center">
-                <a href={{ $url }} style="cursor:pointer">
-                    <button style="border:none; background-color:darkcyan; color:white; padding: 10px 40px; border-radius:7px; cursor:pointer">اضغط
-                        هنا لتأكيد البريد الإلكتروني</button>
-                </a>
-            </div>
+            <p style="text-align: center;">لقد أضفت {{ $user['email'] }} مؤخراً إلى حسابك على منصة VT.</p>
+            <p style="text-align: center;">نشكركم على انضمامكم لمنصة VT ونعدكم بتجربة مميزة وفريدة</p>
 
             <p style="color:slategray; padding-top:40px; text-align:center">للمساعدة في الحفاظ على أمان حسابك، يرجى عدم إعادة توجيه رسالة
                 البريد الإلكتروني هذه.

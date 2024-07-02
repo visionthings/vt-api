@@ -12,7 +12,7 @@ class ContactEmailController extends Controller
      */
     public function index()
     {
-        //
+        return ContactEmail::latest()->first();
     }
 
     /**
